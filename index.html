@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Appointments Only</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -162,43 +162,141 @@
             border: 1px solid #00FF99;
         }
         
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            /* Larger touch targets for mobile */
-            .accordion-header {
-                min-height: 60px;
-                font-size: 16px;
+        /* Base mobile-first styles */
+        body {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        /* Default mobile sizing */
+        .accordion-header {
+            min-height: 56px;
+            font-size: 14px;
+            padding: 12px 16px;
+        }
+        
+        .mobile-menu-item {
+            padding: 12px;
+            min-height: 44px;
+        }
+        
+        .mobile-text {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .mobile-btn {
+            min-height: 40px;
+            min-width: 40px;
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+        
+        /* Aggressive mobile optimizations for small screens */
+        @media (max-width: 480px) {
+            /* Even smaller text for very small screens */
+            body {
+                font-size: 13px;
             }
             
-            /* Better spacing for mobile */
+            .mobile-text {
+                font-size: 12px;
+            }
+            
+            /* Compact header */
+            .mobile-header {
+                padding: 8px 12px;
+            }
+            
+            /* Tighter spacing */
             .mobile-menu-item {
-                padding: 16px 12px;
+                padding: 10px;
+                min-height: 40px;
+            }
+            
+            /* Smaller buttons */
+            .mobile-btn {
+                min-height: 36px;
+                min-width: 36px;
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            /* Compact accordion headers */
+            .accordion-header {
+                min-height: 48px;
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+        }
+        
+        /* Medium mobile and up */
+        @media (min-width: 481px) {
+            .accordion-header {
+                min-height: 60px;
+                font-size: 15px;
+                padding: 14px 16px;
+            }
+            
+            .mobile-btn {
+                min-height: 44px;
+                min-width: 44px;
+                font-size: 13px;
+                padding: 10px 14px;
+            }
+        }
+        
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            body {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+            
+            .accordion-header {
+                min-height: 64px;
+                font-size: 16px;
+                padding: 16px 20px;
+            }
+            
+            .mobile-menu-item {
+                padding: 16px;
                 min-height: 48px;
             }
             
-            /* Improved text readability on mobile */
             .mobile-text {
                 font-size: 14px;
                 line-height: 1.5;
             }
             
+            .mobile-btn {
+                min-height: 48px;
+                min-width: 48px;
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+        }
+        
+        /* Additional mobile-specific optimizations */
+        @media (max-width: 768px) {
             /* Safe area handling for notched devices */
             .mobile-header {
-                padding-top: max(1rem, env(safe-area-inset-top));
-                padding-left: max(1rem, env(safe-area-inset-left));
-                padding-right: max(1rem, env(safe-area-inset-right));
+                padding-top: max(8px, env(safe-area-inset-top));
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
             }
             
             /* Reduced scanline intensity on mobile for better readability */
             body::before {
-                opacity: 0.5;
+                opacity: 0.3;
             }
             
-            /* Mobile-friendly button sizing */
-            .mobile-btn {
-                min-height: 44px;
-                min-width: 44px;
-                font-size: 14px;
+            /* Better corner bracket scaling */
+            .corner-brackets::before,
+            .corner-brackets::after {
+                width: 15px;
+                height: 15px;
+                border-width: 1px;
             }
         }
         
@@ -221,96 +319,97 @@
 <body class="bg-terminal-dark font-mono text-matrix-green min-h-screen grid-overlay">
     <!-- Sticky Header -->
     <header class="sticky top-0 z-50 bg-terminal-dark border-b border-matrix-green mobile-header">
-        <div class="flex justify-between items-center flex-wrap gap-2">
+        <div class="flex justify-between items-center gap-2">
             <div class="relative corner-brackets flex-1 min-w-0">
-                <h1 class="text-xl xs:text-2xl sm:text-3xl font-bold animate-glow-pulse glow-text truncate">
+                <h1 class="font-bold animate-glow-pulse glow-text" style="font-size: clamp(16px, 4vw, 24px);">
                     APPOINTMENTS ONLY
                 </h1>
             </div>
-            <div class="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 flex-shrink-0">
+            <div class="flex items-center gap-2 flex-shrink-0">
                 <!-- Dark mode toggle (even though default is dark) -->
-                <button id="themeToggle" class="audio-btn mobile-btn px-2 xs:px-3 py-2 text-xs xs:text-sm hover-glow touch-feedback rounded">
-                    <span class="hidden xs:inline">THEME</span>
-                    <span class="xs:hidden">T</span>
+                <button id="themeToggle" class="audio-btn mobile-btn hover-glow touch-feedback rounded">
+                    <span class="hidden sm:inline">THEME</span>
+                    <span class="sm:hidden">T</span>
                 </button>
                 <!-- Audio toggle -->
-                <button id="audioToggle" class="audio-btn mobile-btn px-2 xs:px-3 py-2 text-xs xs:text-sm hover-glow touch-feedback rounded">
-                    <span class="hidden xs:inline">SFX: OFF</span>
-                    <span class="xs:hidden">SFX</span>
+                <button id="audioToggle" class="audio-btn mobile-btn hover-glow touch-feedback rounded">
+                    <span class="hidden sm:inline">SFX: OFF</span>
+                    <span class="sm:hidden">SFX</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="container mx-auto px-3 xs:px-4 py-4 xs:py-6 space-y-6 xs:space-y-8 pb-safe-bottom">
+    <main class="mx-auto max-w-4xl" style="padding: clamp(8px, 2vw, 16px); padding-bottom: max(16px, env(safe-area-inset-bottom));">
+        <div class="space-y-4">
         <!-- System Notice -->
-        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-3 xs:p-4 rounded">
-            <h2 class="text-base xs:text-lg font-bold mb-2 glow-text">[SYSTEM NOTICE]</h2>
-            <div class="typing-effect text-sm mobile-text">
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green rounded" style="padding: clamp(8px, 2vw, 16px);">
+            <h2 class="font-bold mb-2 glow-text" style="font-size: clamp(14px, 3vw, 18px);">[SYSTEM NOTICE]</h2>
+            <div class="typing-effect mobile-text">
                 > Appointments Only here- We have an updated menu!
             </div>
-            <div class="mt-2 text-sm mobile-text">
+            <div class="mt-2 mobile-text">
                 > Please confirm your order and address and we will get your order on the way.
             </div>
-            <div class="mt-2 text-sm mobile-text glow-text">
+            <div class="mt-2 mobile-text glow-text">
                 > Any questions or inquiries? Please ask!
             </div>
-            <div class="mt-2 text-xs opacity-75">
+            <div class="mt-2 opacity-75" style="font-size: clamp(10px, 2.5vw, 12px);">
                 > Status: ONLINE | Access Level: AUTHORIZED
             </div>
         </section>
 
         <!-- Menu Categories -->
-        <section class="space-y-3 xs:space-y-4">
-            <h2 class="text-lg xs:text-xl font-bold glow-text mb-3 xs:mb-4">[MENU INTERFACE]</h2>
+        <section class="space-y-3">
+            <h2 class="font-bold glow-text mb-3" style="font-size: clamp(16px, 4vw, 20px);">[MENU INTERFACE]</h2>
             
             <!-- Premium Products Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="premium">
-                    <span class="glow-text font-bold text-sm xs:text-base">[PREMIUM] > High Grade</span>
-                    <span class="accordion-icon transition-transform text-lg">▼</span>
+                <button class="accordion-header w-full text-left hover-glow touch-feedback flex justify-between items-center" data-target="premium">
+                    <span class="glow-text font-bold" style="font-size: clamp(13px, 3.5vw, 16px);">[PREMIUM] > High Grade</span>
+                    <span class="accordion-icon transition-transform" style="font-size: clamp(14px, 3vw, 18px);">▼</span>
                 </button>
                 <div id="premium" class="accordion-content">
-                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                    <div class="border-t border-matrix-green space-y-2" style="padding: clamp(8px, 2vw, 16px);">
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">C 🪩</div>
-                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">C 🪩</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
-                                <div class="text-xs">AVAILABLE</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$100</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">AVAILABLE</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">K 🐎</div>
-                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">K 🐎</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
-                                <div class="text-xs">AVAILABLE</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$100</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">AVAILABLE</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">M 🕺</div>
-                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">M 🕺</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
-                                <div class="text-xs">AVAILABLE</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$100</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">AVAILABLE</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Nasal Spray C & K 🌬️</div>
-                                <div class="text-xs xs:text-sm opacity-75">($120 after two referrals)</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Nasal Spray C & K 🌬️</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">($120 after two referrals)</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$140</div>
-                                <div class="text-xs">AVAILABLE</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$140</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">AVAILABLE</div>
                             </div>
                         </div>
                     </div>
@@ -319,50 +418,50 @@
 
             <!-- Pills & Tabs Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="pills">
-                    <span class="glow-text font-bold text-sm xs:text-base">[PILLS & TABS] > Pharmaceutical</span>
-                    <span class="accordion-icon transition-transform text-lg">▼</span>
+                <button class="accordion-header w-full text-left hover-glow touch-feedback flex justify-between items-center" data-target="pills">
+                    <span class="glow-text font-bold" style="font-size: clamp(13px, 3.5vw, 16px);">[PILLS & TABS] > Pharmaceutical</span>
+                    <span class="accordion-icon transition-transform" style="font-size: clamp(14px, 3vw, 18px);">▼</span>
                 </button>
                 <div id="pills" class="accordion-content">
-                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                    <div class="border-t border-matrix-green space-y-2" style="padding: clamp(8px, 2vw, 16px);">
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">E 🍬 (various shapes & colors)</div>
-                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">E 🍬 (various shapes & colors)</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$25</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$25</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">E 🍭 (Reddit)</div>
-                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">E 🍭 (Reddit)</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$35</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$35</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Gel Tab 🍬</div>
-                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Gel Tab 🍬</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$25</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$25</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Addies 👨‍⚕️ 30mg</div>
-                                <div class="text-xs xs:text-sm opacity-75">1 for $35 | 5 for $150 | 10 for $250</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Addies 👨‍⚕️ 30mg</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">1 for $35 | 5 for $150 | 10 for $250</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$35+</div>
-                                <div class="text-xs">BULK PRICING</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$35+</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">BULK PRICING</div>
                             </div>
                         </div>
                     </div>
@@ -371,50 +470,50 @@
 
             <!-- Gummies & Edibles Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="edibles">
-                    <span class="glow-text font-bold text-sm xs:text-base">[GUMMIES & EDIBLES] > Consumables</span>
-                    <span class="accordion-icon transition-transform text-lg">▼</span>
+                <button class="accordion-header w-full text-left hover-glow touch-feedback flex justify-between items-center" data-target="edibles">
+                    <span class="glow-text font-bold" style="font-size: clamp(13px, 3.5vw, 16px);">[GUMMIES & EDIBLES] > Consumables</span>
+                    <span class="accordion-icon transition-transform" style="font-size: clamp(14px, 3vw, 18px);">▼</span>
                 </button>
                 <div id="edibles" class="accordion-content">
-                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                    <div class="border-t border-matrix-green space-y-2" style="padding: clamp(8px, 2vw, 16px);">
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Magic Kingdom 🍄 Gummies</div>
-                                <div class="text-xs xs:text-sm opacity-75">Premium mushroom blend</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Magic Kingdom 🍄 Gummies</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Premium mushroom blend</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$50</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Azure Vegan 🍄 Gummies</div>
-                                <div class="text-xs xs:text-sm opacity-75">Vegan mushroom formula</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Azure Vegan 🍄 Gummies</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Vegan mushroom formula</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$50</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Shazam Nerds 🍭🍄 Gummy Clusters</div>
-                                <div class="text-xs xs:text-sm opacity-75">6-8 pieces per pack</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Shazam Nerds 🍭🍄 Gummy Clusters</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">6-8 pieces per pack</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$50</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Hella Nice Hash Gummies 🍃</div>
-                                <div class="text-xs xs:text-sm opacity-75">Hash infused</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Hella Nice Hash Gummies 🍃</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Hash infused</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$50</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                     </div>
@@ -423,50 +522,50 @@
 
             <!-- Vapes & Smoking Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="vapes">
-                    <span class="glow-text font-bold text-sm xs:text-base">[VAPES & SMOKING] > Inhalables</span>
-                    <span class="accordion-icon transition-transform text-lg">▼</span>
+                <button class="accordion-header w-full text-left hover-glow touch-feedback flex justify-between items-center" data-target="vapes">
+                    <span class="glow-text font-bold" style="font-size: clamp(13px, 3.5vw, 16px);">[VAPES & SMOKING] > Inhalables</span>
+                    <span class="accordion-icon transition-transform" style="font-size: clamp(14px, 3vw, 18px);">▼</span>
                 </button>
                 <div id="vapes" class="accordion-content">
-                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                    <div class="border-t border-matrix-green space-y-2" style="padding: clamp(8px, 2vw, 16px);">
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">2g Diamond Carts 💨</div>
-                                <div class="text-xs xs:text-sm opacity-75">Premium concentrate cartridge</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">2g Diamond Carts 💨</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Premium concentrate cartridge</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$70</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$70</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">2g Smoothie Blend Vape 💨</div>
-                                <div class="text-xs xs:text-sm opacity-75">Fruit blend cartridge</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">2g Smoothie Blend Vape 💨</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Fruit blend cartridge</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$70</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$70</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Pre Roll</div>
-                                <div class="text-xs xs:text-sm opacity-75">Ready to smoke</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Pre Roll</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Ready to smoke</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$10</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$10</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                         <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold text-sm xs:text-base">Infused Pre Roll</div>
-                                <div class="text-xs xs:text-sm opacity-75">Enhanced with concentrates</div>
+                                <div class="font-bold" style="font-size: clamp(13px, 3vw, 16px);">Infused Pre Roll</div>
+                                <div class="opacity-75" style="font-size: clamp(11px, 2.5vw, 14px);">Enhanced with concentrates</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold text-sm xs:text-base">$15</div>
-                                <div class="text-xs">IN STOCK</div>
+                                <div class="glow-text font-bold" style="font-size: clamp(13px, 3vw, 16px);">$15</div>
+                                <div style="font-size: clamp(10px, 2vw, 12px);">IN STOCK</div>
                             </div>
                         </div>
                     </div>
@@ -475,47 +574,47 @@
         </section>
 
         <!-- Deals Section -->
-        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-3 xs:p-4 rounded">
-            <h2 class="text-base xs:text-lg font-bold mb-3 xs:mb-4 glow-text animate-flicker">[DEALS MENU] > Bulk Pricing</h2>
-            <div class="space-y-3">
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green rounded" style="padding: clamp(8px, 2vw, 16px);">
+            <h2 class="font-bold mb-3 glow-text animate-flicker" style="font-size: clamp(14px, 3.5vw, 18px);">[DEALS MENU] > Bulk Pricing</h2>
+            <div class="space-y-2">
                 <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark text-sm xs:text-base">K & Or M - 3G Bundle</div>
+                        <div class="font-bold text-matrix-dark" style="font-size: clamp(13px, 3vw, 16px);">K & Or M - 3G Bundle</div>
                         <div class="text-xs xs:text-sm opacity-75">3 grams | Save $50</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$300</div>
-                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$250</div>
+                        <div class="glow-text font-bold line-through" style="font-size: clamp(11px, 2.5vw, 13px);">$300</div>
+                        <div class="text-matrix-dark font-bold" style="font-size: clamp(14px, 3.5vw, 18px);">$250</div>
                     </div>
                 </div>
                 <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark text-sm xs:text-base">C - 3G Bundle</div>
+                        <div class="font-bold text-matrix-dark" style="font-size: clamp(13px, 3vw, 16px);">C - 3G Bundle</div>
                         <div class="text-xs xs:text-sm opacity-75">3 grams | Save $25</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$300</div>
-                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$275</div>
+                        <div class="glow-text font-bold line-through" style="font-size: clamp(11px, 2.5vw, 13px);">$300</div>
+                        <div class="text-matrix-dark font-bold" style="font-size: clamp(14px, 3.5vw, 18px);">$275</div>
                     </div>
                 </div>
                 <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark text-sm xs:text-base">Gel Tabs - 5 Pack</div>
+                        <div class="font-bold text-matrix-dark" style="font-size: clamp(13px, 3vw, 16px);">Gel Tabs - 5 Pack</div>
                         <div class="text-xs xs:text-sm opacity-75">5 units | Save $25</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$125</div>
-                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$100</div>
+                        <div class="glow-text font-bold line-through" style="font-size: clamp(11px, 2.5vw, 13px);">$125</div>
+                        <div class="text-matrix-dark font-bold" style="font-size: clamp(14px, 3.5vw, 18px);">$100</div>
                     </div>
                 </div>
                 <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark text-sm xs:text-base">5 Ecstasy 🍭 Pack</div>
+                        <div class="font-bold text-matrix-dark" style="font-size: clamp(13px, 3vw, 16px);">5 Ecstasy 🍭 Pack</div>
                         <div class="text-xs xs:text-sm opacity-75">5 units | Save $75</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$175</div>
-                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$100</div>
+                        <div class="glow-text font-bold line-through" style="font-size: clamp(11px, 2.5vw, 13px);">$175</div>
+                        <div class="text-matrix-dark font-bold" style="font-size: clamp(14px, 3.5vw, 18px);">$100</div>
                     </div>
                 </div>
             </div>
@@ -525,15 +624,16 @@
         </section>
 
         <!-- Terminal Cursor -->
-        <div class="flex items-center space-x-2 text-sm">
+        <div class="flex items-center gap-2" style="font-size: clamp(12px, 3vw, 14px);">
             <span class="glow-text">root@apo:~$</span>
             <span class="animate-blink-cursor border-r-2 border-matrix-green pr-1"></span>
+        </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="mt-8 xs:mt-12 border-t border-matrix-green bg-terminal-bg p-3 xs:p-4 pb-safe-bottom">
-        <div class="space-y-2 text-xs opacity-75">
+    <footer class="mt-6 border-t border-matrix-green bg-terminal-bg opacity-75" style="padding: clamp(8px, 2vw, 16px); padding-bottom: max(16px, env(safe-area-inset-bottom));">
+        <div class="space-y-2" style="font-size: clamp(10px, 2vw, 12px);">
             <div class="flex flex-col xs:flex-row xs:justify-between gap-1 xs:gap-0">
                 <span>[SYS] Version: 2.1.4-matrix</span>
                 <span>Build ID: APO-2024-0315</span>
