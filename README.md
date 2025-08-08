@@ -53,14 +53,15 @@ APO'/
 
 ## Live Deployment
 
-🚀 **Live Site**: https://apo-appointments-only-ietwhk7rg.vercel.app
+🚀 **Live Site**: https://apo-appointments-only-5w4a3ozf5.vercel.app
+🐙 **GitHub Repository**: https://github.com/malwarescan/apo-appointments-only
 
-The website is now deployed and accessible online via Vercel's global CDN.
+The website is now deployed and accessible online via Vercel's global CDN with automatic deployments from GitHub.
 
 ## How to Use
 
 ### Online Access
-1. **Visit Live Site**: https://apo-appointments-only-ietwhk7rg.vercel.app
+1. **Visit Live Site**: https://apo-appointments-only-5w4a3ozf5.vercel.app
 2. **Mobile Optimized**: Best experience on mobile devices but fully responsive
 
 ### Local Development
@@ -75,8 +76,9 @@ The website is now deployed and accessible online via Vercel's global CDN.
 ## Deployment Information
 
 - **Platform**: Vercel
-- **Domain**: https://apo-appointments-only-ietwhk7rg.vercel.app
-- **Auto-Deploy**: Connected to Git repository for automatic deployments
+- **Domain**: https://apo-appointments-only-5w4a3ozf5.vercel.app
+- **GitHub**: https://github.com/malwarescan/apo-appointments-only
+- **Auto-Deploy**: Connected to GitHub repository for automatic deployments
 - **Global CDN**: Fast loading worldwide via Vercel's edge network
 
 ## Technical Details
