@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APO | Appointments Only - Matrix Terminal</title>
+    <title>Appointments Only</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -17,6 +17,19 @@
                         'matrix-dark': '#00FF00',
                         'terminal-bg': '#001100',
                         'terminal-dark': '#000000',
+                    },
+                    screens: {
+                        'xs': '375px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                    },
+                    spacing: {
+                        'safe-top': 'env(safe-area-inset-top)',
+                        'safe-bottom': 'env(safe-area-inset-bottom)',
+                        'safe-left': 'env(safe-area-inset-left)',
+                        'safe-right': 'env(safe-area-inset-right)',
                     },
                     animation: {
                         'scanlines': 'scanlines 0.1s linear infinite',
@@ -148,42 +161,99 @@
             background: linear-gradient(45deg, #001100, #002200);
             border: 1px solid #00FF99;
         }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            /* Larger touch targets for mobile */
+            .accordion-header {
+                min-height: 60px;
+                font-size: 16px;
+            }
+            
+            /* Better spacing for mobile */
+            .mobile-menu-item {
+                padding: 16px 12px;
+                min-height: 48px;
+            }
+            
+            /* Improved text readability on mobile */
+            .mobile-text {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            
+            /* Safe area handling for notched devices */
+            .mobile-header {
+                padding-top: max(1rem, env(safe-area-inset-top));
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+            
+            /* Reduced scanline intensity on mobile for better readability */
+            body::before {
+                opacity: 0.5;
+            }
+            
+            /* Mobile-friendly button sizing */
+            .mobile-btn {
+                min-height: 44px;
+                min-width: 44px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            /* Remove hover effects on touch devices */
+            .hover-glow:hover {
+                text-shadow: 0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99;
+                background-color: rgba(0, 255, 153, 0.05);
+            }
+            
+            /* Add touch feedback */
+            .touch-feedback:active {
+                transform: scale(0.98);
+                background-color: rgba(0, 255, 153, 0.1);
+            }
+        }
     </style>
 </head>
 <body class="bg-terminal-dark font-mono text-matrix-green min-h-screen grid-overlay">
     <!-- Sticky Header -->
-    <header class="sticky top-0 z-50 bg-terminal-dark border-b border-matrix-green p-4">
-        <div class="flex justify-between items-center">
-            <div class="relative corner-brackets">
-                <h1 class="text-2xl md:text-3xl font-bold animate-glow-pulse glow-text">
-                    [APO] APPOINTMENTS ONLY
+    <header class="sticky top-0 z-50 bg-terminal-dark border-b border-matrix-green mobile-header">
+        <div class="flex justify-between items-center flex-wrap gap-2">
+            <div class="relative corner-brackets flex-1 min-w-0">
+                <h1 class="text-xl xs:text-2xl sm:text-3xl font-bold animate-glow-pulse glow-text truncate">
+                    APPOINTMENTS ONLY
                 </h1>
             </div>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 flex-shrink-0">
                 <!-- Dark mode toggle (even though default is dark) -->
-                <button id="themeToggle" class="audio-btn px-3 py-1 text-sm hover-glow rounded">
-                    THEME
+                <button id="themeToggle" class="audio-btn mobile-btn px-2 xs:px-3 py-2 text-xs xs:text-sm hover-glow touch-feedback rounded">
+                    <span class="hidden xs:inline">THEME</span>
+                    <span class="xs:hidden">T</span>
                 </button>
                 <!-- Audio toggle -->
-                <button id="audioToggle" class="audio-btn px-3 py-1 text-sm hover-glow rounded">
-                    SFX: OFF
+                <button id="audioToggle" class="audio-btn mobile-btn px-2 xs:px-3 py-2 text-xs xs:text-sm hover-glow touch-feedback rounded">
+                    <span class="hidden xs:inline">SFX: OFF</span>
+                    <span class="xs:hidden">SFX</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="container mx-auto px-4 py-6 space-y-8">
+    <main class="container mx-auto px-3 xs:px-4 py-4 xs:py-6 space-y-6 xs:space-y-8 pb-safe-bottom">
         <!-- System Notice -->
-        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-4 rounded">
-            <h2 class="text-lg font-bold mb-2 glow-text">[SYSTEM NOTICE]</h2>
-            <div class="typing-effect text-sm">
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-3 xs:p-4 rounded">
+            <h2 class="text-base xs:text-lg font-bold mb-2 glow-text">[SYSTEM NOTICE]</h2>
+            <div class="typing-effect text-sm mobile-text">
                 > Appointments Only here- We have an updated menu!
             </div>
-            <div class="mt-2 text-sm">
+            <div class="mt-2 text-sm mobile-text">
                 > Please confirm your order and address and we will get your order on the way.
             </div>
-            <div class="mt-2 text-sm glow-text">
+            <div class="mt-2 text-sm mobile-text glow-text">
                 > Any questions or inquiries? Please ask!
             </div>
             <div class="mt-2 text-xs opacity-75">
@@ -192,54 +262,54 @@
         </section>
 
         <!-- Menu Categories -->
-        <section class="space-y-4">
-            <h2 class="text-xl font-bold glow-text mb-4">[MENU INTERFACE]</h2>
+        <section class="space-y-3 xs:space-y-4">
+            <h2 class="text-lg xs:text-xl font-bold glow-text mb-3 xs:mb-4">[MENU INTERFACE]</h2>
             
             <!-- Premium Products Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="premium">
-                    <span class="glow-text font-bold">[PREMIUM] > High Grade</span>
-                    <span class="accordion-icon transition-transform">▼</span>
+                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="premium">
+                    <span class="glow-text font-bold text-sm xs:text-base">[PREMIUM] > High Grade</span>
+                    <span class="accordion-icon transition-transform text-lg">▼</span>
                 </button>
                 <div id="premium" class="accordion-content">
-                    <div class="p-4 border-t border-matrix-green space-y-3">
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">C 🪩</div>
-                                <div class="text-sm opacity-75">Per gram</div>
+                                <div class="font-bold text-sm xs:text-base">C 🪩</div>
+                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$100</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
                                 <div class="text-xs">AVAILABLE</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">K 🐎</div>
-                                <div class="text-sm opacity-75">Per gram</div>
+                                <div class="font-bold text-sm xs:text-base">K 🐎</div>
+                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$100</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
                                 <div class="text-xs">AVAILABLE</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">M 🕺</div>
-                                <div class="text-sm opacity-75">Per gram</div>
+                                <div class="font-bold text-sm xs:text-base">M 🕺</div>
+                                <div class="text-xs xs:text-sm opacity-75">Per gram</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$100</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$100</div>
                                 <div class="text-xs">AVAILABLE</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Nasal Spray C & K 🌬️</div>
-                                <div class="text-sm opacity-75">($120 after two referrals)</div>
+                                <div class="font-bold text-sm xs:text-base">Nasal Spray C & K 🌬️</div>
+                                <div class="text-xs xs:text-sm opacity-75">($120 after two referrals)</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$140</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$140</div>
                                 <div class="text-xs">AVAILABLE</div>
                             </div>
                         </div>
@@ -249,49 +319,49 @@
 
             <!-- Pills & Tabs Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="pills">
-                    <span class="glow-text font-bold">[PILLS & TABS] > Pharmaceutical</span>
-                    <span class="accordion-icon transition-transform">▼</span>
+                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="pills">
+                    <span class="glow-text font-bold text-sm xs:text-base">[PILLS & TABS] > Pharmaceutical</span>
+                    <span class="accordion-icon transition-transform text-lg">▼</span>
                 </button>
                 <div id="pills" class="accordion-content">
-                    <div class="p-4 border-t border-matrix-green space-y-3">
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">E 🍬 (various shapes & colors)</div>
-                                <div class="text-sm opacity-75">Single unit</div>
+                                <div class="font-bold text-sm xs:text-base">E 🍬 (various shapes & colors)</div>
+                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$25</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$25</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">E 🍭 (Reddit)</div>
-                                <div class="text-sm opacity-75">Single unit</div>
+                                <div class="font-bold text-sm xs:text-base">E 🍭 (Reddit)</div>
+                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$35</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$35</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Gel Tab 🍬</div>
-                                <div class="text-sm opacity-75">Single unit</div>
+                                <div class="font-bold text-sm xs:text-base">Gel Tab 🍬</div>
+                                <div class="text-xs xs:text-sm opacity-75">Single unit</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$25</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$25</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Addies 👨‍⚕️ 30mg</div>
-                                <div class="text-sm opacity-75">1 for $35 | 5 for $150 | 10 for $250</div>
+                                <div class="font-bold text-sm xs:text-base">Addies 👨‍⚕️ 30mg</div>
+                                <div class="text-xs xs:text-sm opacity-75">1 for $35 | 5 for $150 | 10 for $250</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$35+</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$35+</div>
                                 <div class="text-xs">BULK PRICING</div>
                             </div>
                         </div>
@@ -301,49 +371,49 @@
 
             <!-- Gummies & Edibles Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="edibles">
-                    <span class="glow-text font-bold">[GUMMIES & EDIBLES] > Consumables</span>
-                    <span class="accordion-icon transition-transform">▼</span>
+                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="edibles">
+                    <span class="glow-text font-bold text-sm xs:text-base">[GUMMIES & EDIBLES] > Consumables</span>
+                    <span class="accordion-icon transition-transform text-lg">▼</span>
                 </button>
                 <div id="edibles" class="accordion-content">
-                    <div class="p-4 border-t border-matrix-green space-y-3">
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Magic Kingdom 🍄 Gummies</div>
-                                <div class="text-sm opacity-75">Premium mushroom blend</div>
+                                <div class="font-bold text-sm xs:text-base">Magic Kingdom 🍄 Gummies</div>
+                                <div class="text-xs xs:text-sm opacity-75">Premium mushroom blend</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$50</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Azure Vegan 🍄 Gummies</div>
-                                <div class="text-sm opacity-75">Vegan mushroom formula</div>
+                                <div class="font-bold text-sm xs:text-base">Azure Vegan 🍄 Gummies</div>
+                                <div class="text-xs xs:text-sm opacity-75">Vegan mushroom formula</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$50</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Shazam Nerds 🍭🍄 Gummy Clusters</div>
-                                <div class="text-sm opacity-75">6-8 pieces per pack</div>
+                                <div class="font-bold text-sm xs:text-base">Shazam Nerds 🍭🍄 Gummy Clusters</div>
+                                <div class="text-xs xs:text-sm opacity-75">6-8 pieces per pack</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$50</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Hella Nice Hash Gummies 🍃</div>
-                                <div class="text-sm opacity-75">Hash infused</div>
+                                <div class="font-bold text-sm xs:text-base">Hella Nice Hash Gummies 🍃</div>
+                                <div class="text-xs xs:text-sm opacity-75">Hash infused</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$50</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$50</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
@@ -353,49 +423,49 @@
 
             <!-- Vapes & Smoking Category -->
             <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
-                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="vapes">
-                    <span class="glow-text font-bold">[VAPES & SMOKING] > Inhalables</span>
-                    <span class="accordion-icon transition-transform">▼</span>
+                <button class="accordion-header w-full text-left p-3 xs:p-4 hover-glow touch-feedback flex justify-between items-center" data-target="vapes">
+                    <span class="glow-text font-bold text-sm xs:text-base">[VAPES & SMOKING] > Inhalables</span>
+                    <span class="accordion-icon transition-transform text-lg">▼</span>
                 </button>
                 <div id="vapes" class="accordion-content">
-                    <div class="p-4 border-t border-matrix-green space-y-3">
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                    <div class="p-3 xs:p-4 border-t border-matrix-green space-y-3">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">2g Diamond Carts 💨</div>
-                                <div class="text-sm opacity-75">Premium concentrate cartridge</div>
+                                <div class="font-bold text-sm xs:text-base">2g Diamond Carts 💨</div>
+                                <div class="text-xs xs:text-sm opacity-75">Premium concentrate cartridge</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$70</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$70</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">2g Smoothie Blend Vape 💨</div>
-                                <div class="text-sm opacity-75">Fruit blend cartridge</div>
+                                <div class="font-bold text-sm xs:text-base">2g Smoothie Blend Vape 💨</div>
+                                <div class="text-xs xs:text-sm opacity-75">Fruit blend cartridge</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$70</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$70</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Pre Roll</div>
-                                <div class="text-sm opacity-75">Ready to smoke</div>
+                                <div class="font-bold text-sm xs:text-base">Pre Roll</div>
+                                <div class="text-xs xs:text-sm opacity-75">Ready to smoke</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$10</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$10</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                        <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded">
                             <div>
-                                <div class="font-bold">Infused Pre Roll</div>
-                                <div class="text-sm opacity-75">Enhanced with concentrates</div>
+                                <div class="font-bold text-sm xs:text-base">Infused Pre Roll</div>
+                                <div class="text-xs xs:text-sm opacity-75">Enhanced with concentrates</div>
                             </div>
                             <div class="text-right">
-                                <div class="glow-text font-bold">$15</div>
+                                <div class="glow-text font-bold text-sm xs:text-base">$15</div>
                                 <div class="text-xs">IN STOCK</div>
                             </div>
                         </div>
@@ -405,47 +475,47 @@
         </section>
 
         <!-- Deals Section -->
-        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-4 rounded">
-            <h2 class="text-lg font-bold mb-4 glow-text animate-flicker">[DEALS MENU] > Bulk Pricing</h2>
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-3 xs:p-4 rounded">
+            <h2 class="text-base xs:text-lg font-bold mb-3 xs:mb-4 glow-text animate-flicker">[DEALS MENU] > Bulk Pricing</h2>
             <div class="space-y-3">
-                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark">K & Or M - 3G Bundle</div>
-                        <div class="text-sm opacity-75">3 grams | Save $50</div>
+                        <div class="font-bold text-matrix-dark text-sm xs:text-base">K & Or M - 3G Bundle</div>
+                        <div class="text-xs xs:text-sm opacity-75">3 grams | Save $50</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-sm">$300</div>
-                        <div class="text-matrix-dark font-bold text-lg">$250</div>
+                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$300</div>
+                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$250</div>
                     </div>
                 </div>
-                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark">C - 3G Bundle</div>
-                        <div class="text-sm opacity-75">3 grams | Save $25</div>
+                        <div class="font-bold text-matrix-dark text-sm xs:text-base">C - 3G Bundle</div>
+                        <div class="text-xs xs:text-sm opacity-75">3 grams | Save $25</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-sm">$300</div>
-                        <div class="text-matrix-dark font-bold text-lg">$275</div>
+                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$300</div>
+                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$275</div>
                     </div>
                 </div>
-                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark">Gel Tabs - 5 Pack</div>
-                        <div class="text-sm opacity-75">5 units | Save $25</div>
+                        <div class="font-bold text-matrix-dark text-sm xs:text-base">Gel Tabs - 5 Pack</div>
+                        <div class="text-xs xs:text-sm opacity-75">5 units | Save $25</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-sm">$125</div>
-                        <div class="text-matrix-dark font-bold text-lg">$100</div>
+                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$125</div>
+                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$100</div>
                     </div>
                 </div>
-                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                <div class="mobile-menu-item flex justify-between items-center hover-glow touch-feedback rounded border border-matrix-green">
                     <div>
-                        <div class="font-bold text-matrix-dark">5 Ecstasy 🍭 Pack</div>
-                        <div class="text-sm opacity-75">5 units | Save $75</div>
+                        <div class="font-bold text-matrix-dark text-sm xs:text-base">5 Ecstasy 🍭 Pack</div>
+                        <div class="text-xs xs:text-sm opacity-75">5 units | Save $75</div>
                     </div>
                     <div class="text-right">
-                        <div class="glow-text font-bold line-through text-sm">$175</div>
-                        <div class="text-matrix-dark font-bold text-lg">$100</div>
+                        <div class="glow-text font-bold line-through text-xs xs:text-sm">$175</div>
+                        <div class="text-matrix-dark font-bold text-base xs:text-lg">$100</div>
                     </div>
                 </div>
             </div>
@@ -462,13 +532,13 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-12 border-t border-matrix-green bg-terminal-bg p-4">
+    <footer class="mt-8 xs:mt-12 border-t border-matrix-green bg-terminal-bg p-3 xs:p-4 pb-safe-bottom">
         <div class="space-y-2 text-xs opacity-75">
-            <div class="flex justify-between">
+            <div class="flex flex-col xs:flex-row xs:justify-between gap-1 xs:gap-0">
                 <span>[SYS] Version: 2.1.4-matrix</span>
                 <span>Build ID: APO-2024-0315</span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex flex-col xs:flex-row xs:justify-between gap-1 xs:gap-0">
                 <span>Last Access: <span id="lastAccess"></span></span>
                 <span>Uptime: <span id="uptime"></span></span>
             </div>
@@ -541,7 +611,13 @@
             if (!audioContext) initAudio();
             
             audioEnabled = !audioEnabled;
-            this.textContent = audioEnabled ? 'SFX: ON' : 'SFX: OFF';
+            // Update both mobile and desktop button text
+            const isMobile = window.innerWidth < 375;
+            if (isMobile) {
+                this.innerHTML = audioEnabled ? '<span class="xs:hidden">SFX</span><span class="hidden xs:inline">SFX: ON</span>' : '<span class="xs:hidden">SFX</span><span class="hidden xs:inline">SFX: OFF</span>';
+            } else {
+                this.innerHTML = audioEnabled ? '<span class="xs:hidden">SFX</span><span class="hidden xs:inline">SFX: ON</span>' : '<span class="xs:hidden">SFX</span><span class="hidden xs:inline">SFX: OFF</span>';
+            }
             
             if (audioEnabled) {
                 playUISound(1000, 150);

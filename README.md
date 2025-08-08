@@ -45,16 +45,39 @@ A responsive mobile-first website layout for a private "Appointments Only" menu 
 ```
 APO'/
 ├── index.html          # Main application file
+├── package.json        # Node.js project configuration
+├── vercel.json         # Vercel deployment configuration
+├── .gitignore          # Git ignore rules
 └── README.md          # This documentation
 ```
 
+## Live Deployment
+
+🚀 **Live Site**: https://apo-appointments-only-ietwhk7rg.vercel.app
+
+The website is now deployed and accessible online via Vercel's global CDN.
+
 ## How to Use
 
-1. **Open the Website**: Open `index.html` in any modern web browser
-2. **Mobile Experience**: Best viewed on mobile devices but fully responsive
-3. **Navigation**: Click on menu categories to expand product listings
+### Online Access
+1. **Visit Live Site**: https://apo-appointments-only-ietwhk7rg.vercel.app
+2. **Mobile Optimized**: Best experience on mobile devices but fully responsive
+
+### Local Development
+1. **Open Locally**: Open `index.html` in any modern web browser
+2. **Run Dev Server**: `npm run dev` (requires `npm install` first)
+
+### Navigation
+3. **Browse Menu**: Click on menu categories to expand product listings
 4. **Sound Effects**: Toggle "SFX" button to enable/disable UI sounds
-5. **Theme**: Use "THEME" button to switch between pure black and terminal green
+5. **Theme Switch**: Use "THEME" button to switch between pure black and terminal green
+
+## Deployment Information
+
+- **Platform**: Vercel
+- **Domain**: https://apo-appointments-only-ietwhk7rg.vercel.app
+- **Auto-Deploy**: Connected to Git repository for automatic deployments
+- **Global CDN**: Fast loading worldwide via Vercel's edge network
 
 ## Technical Details
 
