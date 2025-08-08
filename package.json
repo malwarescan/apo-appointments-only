@@ -1,0 +1,23 @@
+{
+  "name": "apo-appointments-only",
+  "version": "1.0.0",
+  "description": "Appointments Only - Matrix Terminal Interface Menu",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve -s . -p 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "serve -s ."
+  },
+  "keywords": [
+    "appointments",
+    "menu",
+    "matrix",
+    "terminal",
+    "retro-futuristic"
+  ],
+  "author": "APO Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

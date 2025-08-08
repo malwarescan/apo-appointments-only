@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APO | Appointments Only - Matrix Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['Share Tech Mono', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    colors: {
+                        'matrix-green': '#00FF99',
+                        'matrix-dark': '#00FF00',
+                        'terminal-bg': '#001100',
+                        'terminal-dark': '#000000',
+                    },
+                    animation: {
+                        'scanlines': 'scanlines 0.1s linear infinite',
+                        'glow-pulse': 'glow-pulse 2s ease-in-out infinite alternate',
+                        'typing': 'typing 3.5s steps(40, end)',
+                        'blink-cursor': 'blink-cursor 1s infinite',
+                        'flicker': 'flicker 0.15s infinite linear',
+                    },
+                    keyframes: {
+                        'scanlines': {
+                            '0%': { transform: 'translateY(-100vh)' },
+                            '100%': { transform: 'translateY(100vh)' },
+                        },
+                        'glow-pulse': {
+                            'from': { 
+                                textShadow: '0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99, 0 0 20px #00FF99',
+                                transform: 'scale(1)',
+                            },
+                            'to': { 
+                                textShadow: '0 0 10px #00FF99, 0 0 20px #00FF99, 0 0 30px #00FF99, 0 0 40px #00FF99',
+                                transform: 'scale(1.02)',
+                            },
+                        },
+                        'typing': {
+                            'from': { width: '0' },
+                            'to': { width: '100%' },
+                        },
+                        'blink-cursor': {
+                            'from, to': { borderColor: 'transparent' },
+                            '50%': { borderColor: '#00FF99' },
+                        },
+                        'flicker': {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.8' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        /* Scanlines overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 153, 0.03) 2px,
+                rgba(0, 255, 153, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanlines 0.1s linear infinite;
+        }
+        
+        /* Grid overlay */
+        .grid-overlay {
+            background-image: 
+                linear-gradient(rgba(0, 255, 153, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 153, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Corner brackets */
+        .corner-brackets::before,
+        .corner-brackets::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00FF99;
+        }
+        
+        .corner-brackets::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .corner-brackets::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* Terminal typing effect */
+        .typing-effect {
+            overflow: hidden;
+            border-right: 2px solid #00FF99;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-cursor 1s infinite;
+        }
+        
+        /* Glowing text */
+        .glow-text {
+            text-shadow: 0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99;
+        }
+        
+        /* Accordion animation */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .accordion-content.open {
+            max-height: 1000px;
+        }
+        
+        /* Hover glow effect */
+        .hover-glow:hover {
+            text-shadow: 0 0 10px #00FF99, 0 0 20px #00FF99, 0 0 30px #00FF99;
+            background-color: rgba(0, 255, 153, 0.1);
+        }
+        
+        /* Audio toggle button */
+        .audio-btn {
+            background: linear-gradient(45deg, #001100, #002200);
+            border: 1px solid #00FF99;
+        }
+    </style>
+</head>
+<body class="bg-terminal-dark font-mono text-matrix-green min-h-screen grid-overlay">
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-terminal-dark border-b border-matrix-green p-4">
+        <div class="flex justify-between items-center">
+            <div class="relative corner-brackets">
+                <h1 class="text-2xl md:text-3xl font-bold animate-glow-pulse glow-text">
+                    [APO] APPOINTMENTS ONLY
+                </h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Dark mode toggle (even though default is dark) -->
+                <button id="themeToggle" class="audio-btn px-3 py-1 text-sm hover-glow rounded">
+                    THEME
+                </button>
+                <!-- Audio toggle -->
+                <button id="audioToggle" class="audio-btn px-3 py-1 text-sm hover-glow rounded">
+                    SFX: OFF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-6 space-y-8">
+        <!-- System Notice -->
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-4 rounded">
+            <h2 class="text-lg font-bold mb-2 glow-text">[SYSTEM NOTICE]</h2>
+            <div class="typing-effect text-sm">
+                > Appointments Only here- We have an updated menu!
+            </div>
+            <div class="mt-2 text-sm">
+                > Please confirm your order and address and we will get your order on the way.
+            </div>
+            <div class="mt-2 text-sm glow-text">
+                > Any questions or inquiries? Please ask!
+            </div>
+            <div class="mt-2 text-xs opacity-75">
+                > Status: ONLINE | Access Level: AUTHORIZED
+            </div>
+        </section>
+
+        <!-- Menu Categories -->
+        <section class="space-y-4">
+            <h2 class="text-xl font-bold glow-text mb-4">[MENU INTERFACE]</h2>
+            
+            <!-- Premium Products Category -->
+            <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
+                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="premium">
+                    <span class="glow-text font-bold">[PREMIUM] > High Grade</span>
+                    <span class="accordion-icon transition-transform">▼</span>
+                </button>
+                <div id="premium" class="accordion-content">
+                    <div class="p-4 border-t border-matrix-green space-y-3">
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">C 🪩</div>
+                                <div class="text-sm opacity-75">Per gram</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$100</div>
+                                <div class="text-xs">AVAILABLE</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">K 🐎</div>
+                                <div class="text-sm opacity-75">Per gram</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$100</div>
+                                <div class="text-xs">AVAILABLE</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">M 🕺</div>
+                                <div class="text-sm opacity-75">Per gram</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$100</div>
+                                <div class="text-xs">AVAILABLE</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Nasal Spray C & K 🌬️</div>
+                                <div class="text-sm opacity-75">($120 after two referrals)</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$140</div>
+                                <div class="text-xs">AVAILABLE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pills & Tabs Category -->
+            <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
+                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="pills">
+                    <span class="glow-text font-bold">[PILLS & TABS] > Pharmaceutical</span>
+                    <span class="accordion-icon transition-transform">▼</span>
+                </button>
+                <div id="pills" class="accordion-content">
+                    <div class="p-4 border-t border-matrix-green space-y-3">
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">E 🍬 (various shapes & colors)</div>
+                                <div class="text-sm opacity-75">Single unit</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$25</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">E 🍭 (Reddit)</div>
+                                <div class="text-sm opacity-75">Single unit</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$35</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Gel Tab 🍬</div>
+                                <div class="text-sm opacity-75">Single unit</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$25</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Addies 👨‍⚕️ 30mg</div>
+                                <div class="text-sm opacity-75">1 for $35 | 5 for $150 | 10 for $250</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$35+</div>
+                                <div class="text-xs">BULK PRICING</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gummies & Edibles Category -->
+            <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
+                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="edibles">
+                    <span class="glow-text font-bold">[GUMMIES & EDIBLES] > Consumables</span>
+                    <span class="accordion-icon transition-transform">▼</span>
+                </button>
+                <div id="edibles" class="accordion-content">
+                    <div class="p-4 border-t border-matrix-green space-y-3">
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Magic Kingdom 🍄 Gummies</div>
+                                <div class="text-sm opacity-75">Premium mushroom blend</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$50</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Azure Vegan 🍄 Gummies</div>
+                                <div class="text-sm opacity-75">Vegan mushroom formula</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$50</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Shazam Nerds 🍭🍄 Gummy Clusters</div>
+                                <div class="text-sm opacity-75">6-8 pieces per pack</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$50</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Hella Nice Hash Gummies 🍃</div>
+                                <div class="text-sm opacity-75">Hash infused</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$50</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vapes & Smoking Category -->
+            <div class="accordion-item border border-matrix-green rounded bg-terminal-bg">
+                <button class="accordion-header w-full text-left p-4 hover-glow flex justify-between items-center" data-target="vapes">
+                    <span class="glow-text font-bold">[VAPES & SMOKING] > Inhalables</span>
+                    <span class="accordion-icon transition-transform">▼</span>
+                </button>
+                <div id="vapes" class="accordion-content">
+                    <div class="p-4 border-t border-matrix-green space-y-3">
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">2g Diamond Carts 💨</div>
+                                <div class="text-sm opacity-75">Premium concentrate cartridge</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$70</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">2g Smoothie Blend Vape 💨</div>
+                                <div class="text-sm opacity-75">Fruit blend cartridge</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$70</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Pre Roll</div>
+                                <div class="text-sm opacity-75">Ready to smoke</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$10</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center hover-glow p-2 rounded">
+                            <div>
+                                <div class="font-bold">Infused Pre Roll</div>
+                                <div class="text-sm opacity-75">Enhanced with concentrates</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="glow-text font-bold">$15</div>
+                                <div class="text-xs">IN STOCK</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deals Section -->
+        <section class="relative corner-brackets bg-terminal-bg border border-matrix-green p-4 rounded">
+            <h2 class="text-lg font-bold mb-4 glow-text animate-flicker">[DEALS MENU] > Bulk Pricing</h2>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                    <div>
+                        <div class="font-bold text-matrix-dark">K & Or M - 3G Bundle</div>
+                        <div class="text-sm opacity-75">3 grams | Save $50</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="glow-text font-bold line-through text-sm">$300</div>
+                        <div class="text-matrix-dark font-bold text-lg">$250</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                    <div>
+                        <div class="font-bold text-matrix-dark">C - 3G Bundle</div>
+                        <div class="text-sm opacity-75">3 grams | Save $25</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="glow-text font-bold line-through text-sm">$300</div>
+                        <div class="text-matrix-dark font-bold text-lg">$275</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                    <div>
+                        <div class="font-bold text-matrix-dark">Gel Tabs - 5 Pack</div>
+                        <div class="text-sm opacity-75">5 units | Save $25</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="glow-text font-bold line-through text-sm">$125</div>
+                        <div class="text-matrix-dark font-bold text-lg">$100</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center hover-glow p-2 rounded border border-matrix-green">
+                    <div>
+                        <div class="font-bold text-matrix-dark">5 Ecstasy 🍭 Pack</div>
+                        <div class="text-sm opacity-75">5 units | Save $75</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="glow-text font-bold line-through text-sm">$175</div>
+                        <div class="text-matrix-dark font-bold text-lg">$100</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 text-xs opacity-75 text-center">
+                * Delivery tips not included in above pricing
+            </div>
+        </section>
+
+        <!-- Terminal Cursor -->
+        <div class="flex items-center space-x-2 text-sm">
+            <span class="glow-text">root@apo:~$</span>
+            <span class="animate-blink-cursor border-r-2 border-matrix-green pr-1"></span>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 border-t border-matrix-green bg-terminal-bg p-4">
+        <div class="space-y-2 text-xs opacity-75">
+            <div class="flex justify-between">
+                <span>[SYS] Version: 2.1.4-matrix</span>
+                <span>Build ID: APO-2024-0315</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Last Access: <span id="lastAccess"></span></span>
+                <span>Uptime: <span id="uptime"></span></span>
+            </div>
+            <div class="text-center mt-4">
+                <div class="glow-text">[SYSTEM LOG]</div>
+                <div id="systemLogs" class="text-xs mt-2 space-y-1">
+                    <div>> Menu database synchronized</div>
+                    <div>> Security protocols active</div>
+                    <div>> Terminal interface loaded</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Audio context for UI sounds
+        let audioContext;
+        let audioEnabled = false;
+        
+        // Initialize audio context
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // UI Sound effects
+        function playUISound(frequency = 800, duration = 100) {
+            if (!audioEnabled || !audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', function() {
+                playUISound(600, 80);
+                
+                const target = document.getElementById(this.dataset.target);
+                const icon = this.querySelector('.accordion-icon');
+                
+                // Close all other accordions
+                document.querySelectorAll('.accordion-content').forEach(content => {
+                    if (content !== target) {
+                        content.classList.remove('open');
+                        const otherIcon = content.previousElementSibling.querySelector('.accordion-icon');
+                        otherIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+                
+                // Toggle current accordion
+                target.classList.toggle('open');
+                icon.style.transform = target.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        });
+        
+        // Audio toggle
+        document.getElementById('audioToggle').addEventListener('click', function() {
+            if (!audioContext) initAudio();
+            
+            audioEnabled = !audioEnabled;
+            this.textContent = audioEnabled ? 'SFX: ON' : 'SFX: OFF';
+            
+            if (audioEnabled) {
+                playUISound(1000, 150);
+            }
+        });
+        
+        // Theme toggle (matrix variations)
+        let themeMode = 'dark';
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            playUISound(700, 100);
+            
+            const body = document.body;
+            if (themeMode === 'dark') {
+                body.style.backgroundColor = '#001100';
+                themeMode = 'green';
+                this.textContent = 'THEME: GREEN';
+            } else {
+                body.style.backgroundColor = '#000000';
+                themeMode = 'dark';
+                this.textContent = 'THEME: DARK';
+            }
+        });
+        
+        // Update system info
+        function updateSystemInfo() {
+            const now = new Date();
+            document.getElementById('lastAccess').textContent = now.toLocaleTimeString();
+            
+            // Fake uptime counter
+            const startTime = Date.now();
+            setInterval(() => {
+                const uptime = Math.floor((Date.now() - startTime) / 1000);
+                const hours = Math.floor(uptime / 3600);
+                const minutes = Math.floor((uptime % 3600) / 60);
+                const seconds = uptime % 60;
+                document.getElementById('uptime').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        // Add hover sound effects
+        document.querySelectorAll('.hover-glow').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                playUISound(400, 50);
+            });
+        });
+        
+        // System logs simulation
+        function addSystemLog(message) {
+            const logsContainer = document.getElementById('systemLogs');
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `> ${message}`;
+            logsContainer.appendChild(logEntry);
+            
+            // Keep only last 5 logs
+            while (logsContainer.children.length > 5) {
+                logsContainer.removeChild(logsContainer.firstChild);
+            }
+        }
+        
+        // Initialize
+        updateSystemInfo();
+        
+        // Simulate random system messages
+        setInterval(() => {
+            const messages = [
+                'Memory scan complete',
+                'Network packets filtered',
+                'Security sweep initiated',
+                'Database optimization running',
+                'Cache cleared successfully'
+            ];
+            addSystemLog(messages[Math.floor(Math.random() * messages.length)]);
+        }, 10000);
+        
+        // Add typing effect to new elements
+        function typeText(element, text, speed = 50) {
+            element.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, speed);
+        }
+        
+        // Welcome message
+        setTimeout(() => {
+            addSystemLog('Welcome to APO Terminal');
+        }, 2000);
+    </script>
+</body>
+</html>
