@@ -45,12 +45,12 @@
                         },
                         'glow-pulse': {
                             'from': { 
-                                textShadow: '0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99, 0 0 20px #00FF99',
+                                textShadow: '0 0 2px #00FF99, 0 0 4px #00FF99, 0 0 6px #00FF99',
                                 transform: 'scale(1)',
                             },
                             'to': { 
-                                textShadow: '0 0 10px #00FF99, 0 0 20px #00FF99, 0 0 30px #00FF99, 0 0 40px #00FF99',
-                                transform: 'scale(1.02)',
+                                textShadow: '0 0 3px #00FF99, 0 0 6px #00FF99, 0 0 9px #00FF99',
+                                transform: 'scale(1.01)',
                             },
                         },
                         'typing': {
@@ -136,7 +136,7 @@
         
         /* Glowing text */
         .glow-text {
-            text-shadow: 0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99;
+            text-shadow: 0 0 2px #00FF99, 0 0 4px #00FF99, 0 0 6px #00FF99;
         }
         
         /* Accordion animation */
@@ -152,8 +152,8 @@
         
         /* Hover glow effect */
         .hover-glow:hover {
-            text-shadow: 0 0 10px #00FF99, 0 0 20px #00FF99, 0 0 30px #00FF99;
-            background-color: rgba(0, 255, 153, 0.1);
+            text-shadow: 0 0 3px #00FF99, 0 0 6px #00FF99, 0 0 9px #00FF99;
+            background-color: rgba(0, 255, 153, 0.05);
         }
         
         /* Audio toggle button */
@@ -304,14 +304,14 @@
         @media (hover: none) and (pointer: coarse) {
             /* Remove hover effects on touch devices */
             .hover-glow:hover {
-                text-shadow: 0 0 5px #00FF99, 0 0 10px #00FF99, 0 0 15px #00FF99;
-                background-color: rgba(0, 255, 153, 0.05);
+                text-shadow: 0 0 2px #00FF99, 0 0 4px #00FF99, 0 0 6px #00FF99;
+                background-color: rgba(0, 255, 153, 0.03);
             }
             
             /* Add touch feedback */
             .touch-feedback:active {
                 transform: scale(0.98);
-                background-color: rgba(0, 255, 153, 0.1);
+                background-color: rgba(0, 255, 153, 0.05);
             }
         }
     </style>
